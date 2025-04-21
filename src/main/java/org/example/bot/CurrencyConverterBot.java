@@ -10,12 +10,12 @@ public class CurrencyConverterBot extends TelegramLongPollingBot {
 
     private final String BOT_USERNAME = "YOUR_BOT_USERNAME";
     private final String BOT_TOKEN = "YOUR_BOT_TOKEN";
-    private CurrencyAPI currencyApi; // интерфейс для получения курсов валют
-    private JSONObject rates; // здесь будут храниться курсы валют
+    private CurrencyAPI currencyApi;
+    private JSONObject rates;
 
     public CurrencyConverterBot() {
-        this.currencyApi = new ExChAPI(); // создаем экземпляр ExChAPI
-        this.rates = currencyApi.getExchangeRates(); // получаем курсы валют при инициализации
+        this.currencyApi = new ExChAPI();
+        this.rates = currencyApi.getExchangeRates();
     }
 
     @Override
@@ -31,6 +31,8 @@ public class CurrencyConverterBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
+
+
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
 
@@ -45,11 +47,11 @@ public class CurrencyConverterBot extends TelegramLongPollingBot {
                     handleAuthorsCommand(chatId);
                     break;
                 default:
-                    handleConversion(messageText, chatId); // обработка конвертации
+                    handleConversion(messageText, chatId);
                     break;
             }
         }
-    }
+    } //словарь делегатов
 
     private void handleStartCommand(long chatId) {
         String response = "Добро пожаловать в Currency Converter Bot!\n"
@@ -78,7 +80,7 @@ public class CurrencyConverterBot extends TelegramLongPollingBot {
 
 
     private void handleConversion(String messageText, long chatId) {
-        // Пример обработки команды конвертации
+
         try {
             String[] parts = messageText.split(" ");
             if (parts.length == 4) {
@@ -111,7 +113,7 @@ public class CurrencyConverterBot extends TelegramLongPollingBot {
         sendMessage.setChatId(String.valueOf(chatId));
         sendMessage.setText(message);
         try {
-            execute(sendMessage); // Отправляем сообщение
+            execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

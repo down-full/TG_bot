@@ -10,7 +10,7 @@ public class StandardCurrencyConverter extends AbstractCurrencyConverter {
 
     @Override
     public double convert(String fromCurrency, String toCurrency, double amount) throws IllegalArgumentException, ArithmeticException {
-        // Проверка на наличие валют в курсах
+
         if (!rates.has(fromCurrency)) {
 
             throw new IllegalArgumentException("Валюта " + fromCurrency + " не поддерживается.");
@@ -24,11 +24,11 @@ public class StandardCurrencyConverter extends AbstractCurrencyConverter {
             throw new IllegalArgumentException("Сумма не может быть отрицательной.");
         }
 
-        // Получаем курсы валют
+
         double fromRate = rates.getDouble(fromCurrency);
         double toRate = rates.getDouble(toCurrency);
 
-        // Проверяем, чтобы не произошло деление на ноль
+
         if (fromRate == 0 ) {
 
             throw new ArithmeticException("Курс валюты " + fromCurrency + " равен нулю, невозможно конвертировать.");
@@ -39,7 +39,7 @@ public class StandardCurrencyConverter extends AbstractCurrencyConverter {
             throw new ArithmeticException(("Курс валюты " + toCurrency + " равен нулю, невозможно конвертировать."));
         }
 
-        // Выполняем конвертацию
+
         return amount * (fromRate / toRate);
     }
 }
