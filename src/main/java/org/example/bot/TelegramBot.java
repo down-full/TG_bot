@@ -22,13 +22,13 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return System.getenv("TelegramBotToken");
+        return System.getenv("tgBotKey");
     }
 
 
     @Override
     public String getBotUsername() {
-        return System.getenv("TelegramBotName");
+        return System.getenv("tgBotName");
     }
 
 }

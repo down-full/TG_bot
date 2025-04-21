@@ -25,7 +25,7 @@ public class Handlers extends TelegramBot{
     helpText.put("start", "Эта команда начинает общение с ботом");
     helpText.put("authors", "Эта команда показывает авторов бота");
     helpText.put("about", "Эта команда расскажет о том, что умеет бот");
-    helpText.put("/help", "Бот имеет следующие команды: \n/start\n/about\n/authors\n/register\n/viewing\n/help\nДля" +
+    helpText.put("/help", "Бот имеет следующие команды: \n/start\n/about\n/authors\n/help\nДля" +
                 " подробной информации введите \"/help команда\"");
     helpText.put("help", "Вводя эту команду вы можете узнать какие команды умеет делать бот");
     }
