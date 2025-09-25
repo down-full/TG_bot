@@ -11,11 +11,20 @@ import java.util.Map;
 public class FreeCurrencyAPI {
     private static final String API_KEY = System.getenv("CURRENCY_API_KEY");
     private static final String BASE_URL = "https://api.freecurrencyapi.com/v1/latest";
+    private static long lastUpdate = 0;
+    private static final long CACHE_DURATION = 24 * 60 * 1000;
+    private static Map <String, Double> cacheRates = null;
 
 
     public static Map<String, Double> getRubRates() throws Exception {
-        Map<String, Double> usdRates = getUSDRates();
 
+       if(isCacheValid()){
+           System.out.println("Используется актуальный кэш");
+           return new HashMap<>(cacheRates);
+       }
+
+       System.out.println("Берем из API");
+        Map<String, Double> usdRates = getUSDRates();
         double rubPerUsd = usdRates.get("RUB");
 
         Map<String, Double> rubRates = new HashMap<>();
@@ -24,8 +33,14 @@ public class FreeCurrencyAPI {
             double rateUsd = entry.getValue();
             rubRates.put(currency, rubPerUsd / rateUsd);
         }
+        cacheRates = new HashMap<>(rubRates);
+        lastUpdate = System.currentTimeMillis();
 
         return rubRates;
+    }
+
+    private static boolean isCacheValid(){
+        return ((System.currentTimeMillis() - lastUpdate) < CACHE_DURATION && (cacheRates != null));
     }
 
     private static Map<String, Double> getUSDRates() throws Exception {
