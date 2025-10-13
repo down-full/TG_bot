@@ -23,7 +23,7 @@ public class FreeCurrencyAPI {
            return new HashMap<>(cacheRates);
        }
 
-       System.out.println("Берем из API");
+        System.out.println("Берем из API");
         Map<String, Double> usdRates = getUSDRates();
         double rubPerUsd = usdRates.get("RUB");
 
@@ -72,6 +72,5 @@ public class FreeCurrencyAPI {
             case "DOLLAR", "$" -> "USD";
             default -> code;
         };
-
     }
 }

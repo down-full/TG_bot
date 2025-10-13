@@ -2,6 +2,9 @@ package org.example.bot;
 
 public class StartCommand extends Executer implements Command{
     private String answer = "Привет, это бот-конвертатор";
+    private String started = "Бот уже запущен и готов к работе!";
+    private boolean isStarted = false;
+
     @Override
     public String getName() {
         return "/start";
@@ -14,7 +17,12 @@ public class StartCommand extends Executer implements Command{
 
 
     public void execute(Long chatId, String messageText) {
-
-        sendMessage(chatId, answer);
+        System.out.println("isStarted = " + isStarted);
+        if(!isStarted) {
+            sendMessage(chatId, answer);
+            isStarted = true;
+        } else {
+            sendMessage(chatId, started);
+        }
     }
 }
