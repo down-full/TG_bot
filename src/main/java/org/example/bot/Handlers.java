@@ -17,6 +17,7 @@ public class Handlers extends Executer {
         new HelpCommand(commands).register(commands);
         new ConvertCommand().register(commands);
         new RateCommand().register(commands);
+        new FavouritesCommand().register(commands);
     }
 
     public void telegramHandlers(Long chatId, String messageText) {
