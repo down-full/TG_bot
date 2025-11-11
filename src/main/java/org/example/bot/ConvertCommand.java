@@ -1,10 +1,10 @@
 package org.example.bot;
-
-import org.example.bot.BotStateService.BotState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Map;
+
+
 
 public class ConvertCommand extends Executer implements Command {
     private static final Logger log = LoggerFactory.getLogger(ConvertCommand.class);
@@ -18,44 +18,28 @@ public class ConvertCommand extends Executer implements Command {
     @Override
     public String getDescription() {
         return "Конвертация валют\n" +
-                "1) Введите /convert\n" +
-                "2) Отправьте сообщение в формате: <сумма><из валюты><в валюту>\n" +
-                "Пример: 100 usd eur";
+                "Формат: /convert <сумма> <из валюты> <в валюту>\n";
     }
 
     @Override
     public void execute(Long chatId, String messageText) {
-        BotStateService.BotState state = BotStateService.getState(chatId);
-
-        if (state == BotState.AWAITING_ARGS) {
-            Conversion(chatId, messageText);
-            BotStateService.clearState(chatId);
-        } else {
-            BotStateService.setState(chatId, BotState.AWAITING_ARGS);
-            sendMessage(chatId, "Введите данные для конвертации в формате:\n" + 
-            "<сумма> <из валюты> <в валюту>\n" +
-            "Пример: 100 usd eur");
-        }
-    }
-
-    public void Conversion(Long chatId, String args) {
         try {
-            String[] arguments = args.trim().split("\\s+");
-
-            if (arguments.length < 3) {
-                sendMessage(chatId, "Неверный формат ввода аргументов!");
+            String[] args = messageText.trim().split("\\s+");
+            if (args.length != 4) {
+                sendMessage(chatId, "Неверный формат. Используйте: " + getDescription());
                 return;
             }
 
-            double amount = parseAmount(arguments[0]);
+            double amount = parseAmount(args[1]);
 
             if (amount <= 0) {
-                sendMessage(chatId, "Сумма должна быть положительной!");
+                sendMessage(chatId, "Сумма должна быть положительным числом");
                 return;
             }
 
-            String fromCurrency = FreeCurrencyAPI.normalizeCurrencyCode(arguments[1]);
-            String toCurrency = FreeCurrencyAPI.normalizeCurrencyCode(arguments[2]);
+            String fromCurrency = FreeCurrencyAPI.normalizeCurrencyCode(args[2]);
+
+            String toCurrency = FreeCurrencyAPI.normalizeCurrencyCode(args[3]);
 
             Map<String, Double> rubRates = FreeCurrencyAPI.getRubRates();
 
@@ -70,22 +54,32 @@ public class ConvertCommand extends Executer implements Command {
             double result = (amount * fromRate) / toRate;
 
             String response = String.format(
-                    "Результат конвертации:\n%s %s = %s %s\nКурс: 1 %s = %.4f %s",
+                    "Результат конвертации:\n" +
+                            "%s %s = %s %s\n" +
+                            "Курс: 1 %s = %.4f %s",
+
+
                     DF.format(amount), fromCurrency,
                     DF.format(result), toCurrency,
                     fromCurrency, (fromRate / toRate), toCurrency
-            );
 
+
+            );
             sendMessage(chatId, response);
 
-        } catch (NumberFormatException e){
-            sendMessage(chatId, "Неверный формат суммы!");
+        } catch (NumberFormatException e) {
+            sendMessage(chatId, "Неверный формат суммы. Пример: 100 или 50.25");
+
         } catch (Exception e) {
-            log.error("Ошибка при конвертации, {}", args, e);
+            log.error("Ошибка в /convert: {}", messageText, e);
             sendMessage(chatId, "Ошибка при конвертации. Попробуйте позже.");
         }
+
+
     }
-    private double parseAmount(String amountStr) throws NumberFormatException { 
+    private double parseAmount(String amountStr) throws NumberFormatException {
         return Double.parseDouble(amountStr.replace(",", "."));
     }
+
+
 }

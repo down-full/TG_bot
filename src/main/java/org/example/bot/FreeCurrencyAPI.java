@@ -12,7 +12,7 @@ public class FreeCurrencyAPI {
     private static final String API_KEY = System.getenv("CURRENCY_API_KEY");
     private static final String BASE_URL = "https://api.freecurrencyapi.com/v1/latest";
     private static long lastUpdate = 0;
-    private static final long CACHE_DURATION = 24 * 60 * 1000;
+    private static final long CACHE_DURATION = 10 * 60 * 1000;
     private static Map <String, Double> cacheRates = null;
 
 

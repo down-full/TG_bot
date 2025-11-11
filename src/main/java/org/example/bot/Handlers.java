@@ -18,6 +18,7 @@ public class Handlers extends Executer {
         new ConvertCommand().register(commands);
         new RateCommand().register(commands);
         new FavouritesCommand().register(commands);
+        new NotifyCommand().register(commands);
     }
 
     public void telegramHandlers(Long chatId, String messageText) {
@@ -26,16 +27,6 @@ public class Handlers extends Executer {
             return;
         }
 
-        BotStateService.BotState state = BotStateService.getState(chatId);
-        if (state == BotStateService.BotState.AWAITING_ARGS) {
-            Command convertCommand = commands.get("/convert");
-            if (convertCommand != null) {
-                ((ConvertCommand) convertCommand).Conversion(chatId, messageText);
-                BotStateService.clearState(chatId);
-            }
-            return;
-        }
-        
         String commandName = messageText.split(" ")[0];
         Command command = commands.get(commandName);
         if (command != null) {
@@ -44,5 +35,4 @@ public class Handlers extends Executer {
             sendMessage(chatId, "Неизвестная команда. Используйте /help для получения списка команд.");
         }
     }
-
 }

@@ -94,6 +94,7 @@ public class FavouritesCommand extends Executer implements Command {
         } catch (Exception e) {
             sendMessage(chatId, "Ошибка при проверке валют. Попробуйте позже.");
         }
+        NotService.updateUserThresholds(chatId);
     }
 
     private void clearFav(Long chatId, String[] args) {
@@ -136,6 +137,7 @@ public class FavouritesCommand extends Executer implements Command {
         }
 
         sendMessage(chatId, response.toString());
+        NotService.updateUserThresholds(chatId);
     }
 
     private void clearAllFav(Long chatId) {
@@ -166,5 +168,11 @@ public class FavouritesCommand extends Executer implements Command {
         } catch (Exception e) {
             sendMessage(chatId, "Ошибка при получении курсов валют. Попробуйте позже.");
         }
+        if (FavouritesCommand.getFavorites(chatId).isEmpty()) {
+            NotService.disableNotifications(chatId);
+        }
+    }
+    public static List<String> getFavorites(Long chatId) {
+        return userFavorites.getOrDefault(chatId, new ArrayList<>());
     }
 }
