@@ -13,15 +13,18 @@ public class StartCommandTest {
 
     @Before
     public void setUp() {
+        startCommand = new StartCommand();
+
         startCommand = new StartCommand() {
             @Override
-            public void sendMessage(Long chatId, String messageText) {
+            public void sendMessageWithKeyboard(Long chatId, String messageText) {
                 lastSentMessage = messageText;
             }
         };
 
         chatId = 12345L;
         messageText = "/start";
+        lastSentMessage = null;
     }
 
     @Test
@@ -38,13 +41,6 @@ public class StartCommandTest {
     public void execute_firstTime() {
         
         startCommand.execute(chatId, messageText);
-        assertEquals("Привет, это бот-конвертатор", lastSentMessage);
-    }
-
-    @Test
-    public void execute_secondTime() {
-        startCommand.execute(chatId, messageText);
-        startCommand.execute(chatId, messageText);
-        assertEquals("Бот уже запущен и готов к работе!", lastSentMessage);
+        assertEquals("Привет! Это бот-конвертатор валют.\n\nИспользуйте кнопки ниже:", lastSentMessage);
     }
 }

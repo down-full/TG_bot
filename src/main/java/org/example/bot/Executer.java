@@ -52,10 +52,16 @@ public abstract class Executer extends TelegramBot {
         row2.add(new KeyboardButton("/fadd"));
         row2.add(new KeyboardButton("/about"));
 
+        // Новая кнопка /notify добавляем в третий ряд
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add(new KeyboardButton("/notify"));
+
         keyboard.add(row1);
         keyboard.add(row2);
+        keyboard.add(row3);  // добавляем третий ряд с новой кнопкой
 
         keyboardMarkup.setKeyboard(keyboard);
         return keyboardMarkup;
     }
+
 }

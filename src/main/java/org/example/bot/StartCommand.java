@@ -14,6 +14,6 @@ public class StartCommand extends Executer implements Command {
 
     @Override
     public void execute(Long chatId, String messageText) {
-        sendMessageWithKeyboard(chatId, "Привет! Это бот-конвертер валют.\n\nИспользуйте кнопки ниже:");
+        sendMessageWithKeyboard(chatId, "Привет! Это бот-конвертатор валют.\n\nИспользуйте кнопки ниже:");
     }
 }

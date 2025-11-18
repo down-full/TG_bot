@@ -169,7 +169,7 @@ public class FavouritesCommand extends Executer implements Command {
             sendMessage(chatId, "Ошибка при получении курсов валют. Попробуйте позже.");
         }
         if (FavouritesCommand.getFavorites(chatId).isEmpty()) {
-            NotService.disableNotifications(chatId);
+            NotService.clearAll(chatId);
         }
     }
     public static List<String> getFavorites(Long chatId) {

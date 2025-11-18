@@ -76,7 +76,7 @@ public class RateCommandTest {
     }
     
     @Test
-    void testExecute_InvalidFormat() {
+    public void testExecute_InvalidFormat() {
         command.execute(1L, "/rate usd extra");
         assertTrue(command.lastMessage.contains("Неправильный формат"));
     }
