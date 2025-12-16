@@ -1,10 +1,11 @@
-package org.example.bot;
+package org.example.bot.Commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Map;
 
-
+import org.example.bot.API.FreeCurrencyAPI;
+import org.example.bot.Core.Executer;
 
 public class ConvertCommand extends Executer implements Command {
     private static final Logger log = LoggerFactory.getLogger(ConvertCommand.class);
@@ -80,6 +81,4 @@ public class ConvertCommand extends Executer implements Command {
     private double parseAmount(String amountStr) throws NumberFormatException {
         return Double.parseDouble(amountStr.replace(",", "."));
     }
-
-
 }

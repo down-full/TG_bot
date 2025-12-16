@@ -1,5 +1,11 @@
-package org.example.bot;
+package org.example.bot.ComTests;
 
+import org.example.bot.Commands.AboutCommand;
+import org.example.bot.Commands.AuthorsCommand;
+import org.example.bot.Commands.Command;
+import org.example.bot.Commands.HelpCommand;
+import org.example.bot.Commands.StartCommand;
+import org.example.bot.Core.Executer;
 import org.junit.Before;
 import org.junit.Test;
 

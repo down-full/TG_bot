@@ -1,4 +1,6 @@
-package org.example.bot;
+package org.example.bot.Commands;
+
+import org.example.bot.Core.Executer;
 
 public class AuthorsCommand extends Executer implements Command{
     private String answer = "Авторы: Волокитина Валерия и Кудисов Арсений";

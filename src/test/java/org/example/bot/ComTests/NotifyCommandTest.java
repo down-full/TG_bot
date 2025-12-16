@@ -1,5 +1,7 @@
-package org.example.bot;
+package org.example.bot.ComTests;
 
+import org.example.bot.Commands.NotifyCommand;
+import org.example.bot.Utils.NotService;
 import org.junit.Before;
 import org.junit.Test;
 

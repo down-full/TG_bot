@@ -1,9 +1,11 @@
-package org.example.bot;
+package org.example.bot.ComTests;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+
+import org.example.bot.Commands.StartCommand;
 
 public class StartCommandTest {
     private StartCommand startCommand;

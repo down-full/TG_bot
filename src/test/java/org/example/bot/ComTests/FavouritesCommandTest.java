@@ -1,5 +1,6 @@
-package org.example.bot;
+package org.example.bot.ComTests;
 
+import org.example.bot.Commands.FavouritesCommand;
 import org.junit.Before;
 import org.junit.Test;
 

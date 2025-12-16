@@ -1,13 +1,14 @@
-package org.example.bot;
+package org.example.bot.Utils;
 
+import org.example.bot.API.FreeCurrencyAPI;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean; //позволяет сравнивать быстрее за счет исп. процессора
-
+import java.util.concurrent.atomic.AtomicBoolean; // позволяет сравнивать быстрее за счет исп. процессора и позв. запустить
+                                                  // планировщик задач один раз
 
 public class NotService {
     private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -44,6 +45,7 @@ public class NotService {
 
     public static void start() {
         if (started.compareAndSet(false, true)) {
+            load();
             scheduler.scheduleAtFixedRate(NotService::pollAndNotify, 60, POLL_INTERVAL_SECONDS, TimeUnit.SECONDS);
         }
     }
@@ -57,7 +59,13 @@ public class NotService {
     }
 
     public static void setThreshold(Long chatId, String currency, Threshold threshold) {
-        userThresholds.computeIfAbsent(chatId, id -> new ConcurrentHashMap<>()).put(currency, threshold);
+        ConcurrentMap<String, Threshold> map = userThresholds.computeIfAbsent(chatId, id -> new ConcurrentHashMap<>());
+        if (!map.containsKey(currency) && map.size() >= MAX_NOTIFICATIONS) {
+            System.out.println("Пользователь " + chatId + " достиг лимита уведомлений: " + MAX_NOTIFICATIONS);
+            return;
+        }
+        map.put(currency, threshold);
+        save();
     }
 
     public static void removeThreshold(Long chatId, String currency) {
@@ -66,10 +74,12 @@ public class NotService {
             map.remove(currency);
             if (map.isEmpty()) userThresholds.remove(chatId);
         }
+        save();
     }
 
     public static void clearAll(Long chatId) {
         userThresholds.remove(chatId);
+        save();
     }
 
     public static boolean hasNotifications(Long chatId) {
@@ -113,13 +123,10 @@ public class NotService {
                         n.threshold.type == Threshold.Type.GREATER_EQUAL ? ">=" : "<=",
                         n.threshold.value);
                 sendTelegramMessage(n.chatId, text);
-
-                // удаляем порог — одноразовое уведомление
                 removeThreshold(n.chatId, n.currency);
             }
 
         } catch (Exception ex) {
-            // простое логирование — замени на логгер при желании
             ex.printStackTrace();
         }
     }
@@ -152,5 +159,54 @@ public class NotService {
             e.printStackTrace();
         }
     }
+
+    private static final String SAVE_FILE = "thresholds.txt";
+    private static final int MAX_NOTIFICATIONS = 10;
+
+    private static synchronized void save() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(SAVE_FILE))) {
+            for (Map.Entry<Long, ConcurrentMap<String, Threshold>> user : userThresholds.entrySet()) {
+                Long chatId = user.getKey();
+                for (Map.Entry<String, Threshold> t : user.getValue().entrySet()) {
+                    pw.println(chatId + ":" + t.getKey() + ":" +
+                            (t.getValue().type == Threshold.Type.GREATER_EQUAL ? ">=" : "<=") +
+                            ":" + t.getValue().value);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void load() {
+        File file = new File(SAVE_FILE);
+        if (!file.exists()) return;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(":");
+                if (parts.length != 4) continue;
+
+                try {
+                    Long chatId = Long.parseLong(parts[0]);
+                    String currency = parts[1];
+                    Threshold.Type type = parts[2].equals(">=") ?
+                            Threshold.Type.GREATER_EQUAL : Threshold.Type.LESS_EQUAL;
+                    double value = Double.parseDouble(parts[3]);
+                    userThresholds.computeIfAbsent(chatId, id -> new ConcurrentHashMap<>())
+                                .put(currency, new Threshold(type, value));
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+
+
 

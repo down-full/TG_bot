@@ -1,9 +1,13 @@
-package org.example.bot;
+package org.example.bot.Commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.example.bot.API.FreeCurrencyAPI;
+import org.example.bot.Core.Executer;
+import org.example.bot.Utils.NotService;
 
 public class FavouritesCommand extends Executer implements Command {
     private static final Map<Long, List<String>> userFavorites = new HashMap<>();
@@ -172,6 +176,7 @@ public class FavouritesCommand extends Executer implements Command {
             NotService.clearAll(chatId);
         }
     }
+    
     public static List<String> getFavorites(Long chatId) {
         return userFavorites.getOrDefault(chatId, new ArrayList<>());
     }

@@ -1,9 +1,12 @@
-package org.example.bot;
+package org.example.bot.ComTests;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+
+import org.example.bot.Commands.AboutCommand;
+import org.example.bot.Core.Executer;
 
 public class AboutCommandTest {
 

@@ -1,4 +1,6 @@
-package org.example.bot;
+package org.example.bot.Commands;
+
+import org.example.bot.Core.Executer;
 
 public class StartCommand extends Executer implements Command {
 

@@ -1,4 +1,4 @@
-package org.example.bot;
+package org.example.bot.Core;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -21,7 +21,6 @@ public abstract class Executer extends TelegramBot {
         }
     }
 
-    // НОВЫЙ МЕТОД - отправка сообщения с кнопками
     public void sendMessageWithKeyboard(Long chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
@@ -52,16 +51,14 @@ public abstract class Executer extends TelegramBot {
         row2.add(new KeyboardButton("/fadd"));
         row2.add(new KeyboardButton("/about"));
 
-        // Новая кнопка /notify добавляем в третий ряд
         KeyboardRow row3 = new KeyboardRow();
         row3.add(new KeyboardButton("/notify"));
 
         keyboard.add(row1);
         keyboard.add(row2);
-        keyboard.add(row3);  // добавляем третий ряд с новой кнопкой
+        keyboard.add(row3);
 
         keyboardMarkup.setKeyboard(keyboard);
         return keyboardMarkup;
     }
-
 }

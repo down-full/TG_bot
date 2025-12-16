@@ -1,7 +1,9 @@
-package org.example.bot;
+package org.example.bot.Commands;
+
+import org.example.bot.Core.Executer;
 
 public class AboutCommand extends Executer implements Command{
-    private String answer = "Этот бот конвертирует валюты и металлы";
+    private String answer = "Этот бот конвертирует валюты и обладает полезным для Вас функционалом.";
     @Override
     public String getName() {
         return "/about";

@@ -1,5 +1,7 @@
-package org.example.bot;
+package org.example.bot.Commands;
 import java.util.Map;
+
+import org.example.bot.Core.Executer;
 
 public class HelpCommand extends Executer implements Command{
     private Map<String, Command> commands;

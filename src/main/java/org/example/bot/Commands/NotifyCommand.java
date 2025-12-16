@@ -1,6 +1,10 @@
-package org.example.bot;
+package org.example.bot.Commands;
 
 import java.util.Map;
+
+import org.example.bot.API.FreeCurrencyAPI;
+import org.example.bot.Core.Executer;
+import org.example.bot.Utils.NotService;
 
 public class NotifyCommand extends Executer implements Command {
 
