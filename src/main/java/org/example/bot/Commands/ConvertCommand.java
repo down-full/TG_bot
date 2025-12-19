@@ -1,11 +1,11 @@
-package org.example.bot.Commands;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.example.bot.commands;
+
 import java.text.DecimalFormat;
 import java.util.Map;
-
-import org.example.bot.API.FreeCurrencyAPI;
-import org.example.bot.Core.Executer;
+import org.example.bot.api.FreeCurrencyApi;
+import org.example.bot.core.Executer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConvertCommand extends Executer implements Command {
     private static final Logger log = LoggerFactory.getLogger(ConvertCommand.class);
@@ -18,8 +18,8 @@ public class ConvertCommand extends Executer implements Command {
 
     @Override
     public String getDescription() {
-        return "Конвертация валют\n" +
-                "Формат: /convert <сумма> <из валюты> <в валюту>\n";
+        return "Конвертация валют\n" 
+             + "Формат: /convert <сумма> <из валюты> <в валюту>\n";
     }
 
     @Override
@@ -38,15 +38,15 @@ public class ConvertCommand extends Executer implements Command {
                 return;
             }
 
-            String fromCurrency = FreeCurrencyAPI.normalizeCurrencyCode(args[2]);
+            String fromCurrency = FreeCurrencyApi.normalizeCurrencyCode(args[2]);
 
-            String toCurrency = FreeCurrencyAPI.normalizeCurrencyCode(args[3]);
+            String toCurrency = FreeCurrencyApi.normalizeCurrencyCode(args[3]);
 
-            Map<String, Double> rubRates = FreeCurrencyAPI.getRubRates();
+            Map<String, Double> rubRates = FreeCurrencyApi.getRubRates();
 
             if (!rubRates.containsKey(fromCurrency) || !rubRates.containsKey(toCurrency)) {
-                sendMessage(chatId, "Одна из валют не найдена. Доступные: " +
-                        String.join(", ", rubRates.keySet()));
+                sendMessage(chatId, "Одна из валют не найдена. Доступные: "
+                        + String.join(", ", rubRates.keySet()));
                 return;
             }
 
@@ -55,9 +55,9 @@ public class ConvertCommand extends Executer implements Command {
             double result = (amount * fromRate) / toRate;
 
             String response = String.format(
-                    "Результат конвертации:\n" +
-                            "%s %s = %s %s\n" +
-                            "Курс: 1 %s = %.4f %s",
+                    "Результат конвертации:\n"
+                            + "%s %s = %s %s\n"
+                            + "Курс: 1 %s = %.4f %s",
 
 
                     DF.format(amount), fromCurrency,
@@ -75,9 +75,8 @@ public class ConvertCommand extends Executer implements Command {
             log.error("Ошибка в /convert: {}", messageText, e);
             sendMessage(chatId, "Ошибка при конвертации. Попробуйте позже.");
         }
-
-
     }
+    
     private double parseAmount(String amountStr) throws NumberFormatException {
         return Double.parseDouble(amountStr.replace(",", "."));
     }

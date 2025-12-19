@@ -1,7 +1,7 @@
-package org.example.bot.Utils;
+package org.example.bot.utils;
 
 import java.util.Map;
 
-public interface CurrencyAPI {
+public interface CurrencyApi {
     Map<String, Double> getHistorical(String baseCurrency, String date) throws Exception;
 }

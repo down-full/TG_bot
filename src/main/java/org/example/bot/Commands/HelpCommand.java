@@ -1,9 +1,9 @@
-package org.example.bot.Commands;
+package org.example.bot.commands;
+
 import java.util.Map;
+import org.example.bot.core.Executer;
 
-import org.example.bot.Core.Executer;
-
-public class HelpCommand extends Executer implements Command{
+public class HelpCommand extends Executer implements Command {
     private Map<String, Command> commands;
 
     public HelpCommand(Map<String, Command> commands) {
@@ -21,28 +21,27 @@ public class HelpCommand extends Executer implements Command{
     }
 
     public void execute(Long chatId, String messageText) {
-        if(messageText.equals("/help")){
+        if (messageText.equals("/help")) {
             StringBuilder helpMessage = new StringBuilder("Список достпуных команд\n\n");
-            for(Command cmd : commands.values()){
-                helpMessage.append(cmd.getName()).append("-").append(cmd.getDescription()).append("\n");
+            for (Command cmd : commands.values()) {
+                helpMessage.append(cmd.getName()).append("-")
+                .append(cmd.getDescription())
+                .append("\n");
             }
             sendMessage(chatId, helpMessage.toString());
-        }
-        else{
+        } else {
             String cmdName = messageText.substring(6).trim();
             Command cmd = commands.get(cmdName);
-            if(cmd!=null){
+            if (cmd != null) {
                 sendMessage(chatId, cmd.getDescription());
-            }
-            else{
+            } else {
                 sendMessage(chatId, "Такой команды нет, воспользуйтесь /help");
             }
         }
-
     }
+
     @Override
     public void register(Map<String, Command> registry) {
-
         registry.put(getName(), this);
     }
 }

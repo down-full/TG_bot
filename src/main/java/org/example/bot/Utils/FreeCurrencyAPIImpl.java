@@ -1,13 +1,12 @@
-package org.example.bot.Core;
+package org.example.bot.utils;
 
 import java.util.Map;
+import org.example.bot.api.FreeCurrencyApi;
 
-import org.example.bot.API.FreeCurrencyAPI;
-import org.example.bot.Utils.CurrencyAPI;
+public class FreeCurrencyApiImpl implements CurrencyApi {
 
-public class FreeCurrencyAPIImpl implements CurrencyAPI {
     @Override
     public Map<String, Double> getHistorical(String baseCurrency, String date) throws Exception {
-        return FreeCurrencyAPI.getHistorical(baseCurrency, date);
+        return FreeCurrencyApi.getHistorical(baseCurrency, date);
     }
 }

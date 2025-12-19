@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <!-- Импортируем Google Checks -->
+    <module name="SuppressionFilter">
+        <property name="file" value="${org.checkstyle.google.suppressionfilter.config}"
+                  default="checkstyle-suppressions.xml"/>
+    </module>
+    
+    <module name="TreeWalker">
+        <!-- ПЕРЕОПРЕДЕЛЯЕМ только Indentation -->
+        <module name="Indentation">
+            <property name="basicOffset" value="4"/>      <!-- 4 вместо 2 -->
+            <property name="braceAdjustment" value="0"/>
+            <property name="caseIndent" value="4"/>       <!-- 4 вместо 2 -->
+            <property name="throwsIndent" value="8"/>     <!-- 8 вместо 4 -->
+            <property name="lineWrappingIndentation" value="8"/>
+            <property name="arrayInitIndent" value="4"/>  <!-- 4 вместо 2 -->
+        </module>
+        
+        <!-- А ВОТ ТАК ИМПОРТИРУЕМ ВСЕ ОСТАЛЬНЫЕ ПРАВИЛА GOOGLE -->
+        <!-- К сожалению, напрямую импорт не работает, поэтому... -->
+    </module>
+</module>

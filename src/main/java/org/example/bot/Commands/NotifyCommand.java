@@ -1,10 +1,9 @@
-package org.example.bot.Commands;
+package org.example.bot.commands;
 
 import java.util.Map;
-
-import org.example.bot.API.FreeCurrencyAPI;
-import org.example.bot.Core.Executer;
-import org.example.bot.Utils.NotService;
+import org.example.bot.api.FreeCurrencyApi;
+import org.example.bot.core.Executer;
+import org.example.bot.utils.NotService;
 
 public class NotifyCommand extends Executer implements Command {
 
@@ -70,7 +69,10 @@ public class NotifyCommand extends Executer implements Command {
             return;
         }
         StringBuilder sb = new StringBuilder("Ваши уведомления:\n");
-        map.forEach((cur, th) -> sb.append(cur).append(" ").append(th.toString()).append("\n")); //создаем строку для уведа
+        map.forEach((cur, th) -> sb.append(cur)
+        .append(" ")
+        .append(th.toString())
+        .append("\n")); //создаем строку для уведа
         sendMessage(chatId, sb.toString());
     }
 
@@ -79,12 +81,12 @@ public class NotifyCommand extends Executer implements Command {
             sendMessage(chatId, "Неверный формат. Пример: /notify set USD >= 90");
             return;
         }
-        String currency = FreeCurrencyAPI.normalizeCurrencyCode(parts[2]);
+        String currency = FreeCurrencyApi.normalizeCurrencyCode(parts[2]);
         String operation = parts[3];
         String valStr = parts[4];
 
         try {
-            Map<String, Double> rates = FreeCurrencyAPI.getRubRates();
+            Map<String, Double> rates = FreeCurrencyApi.getRubRates();
             if (!rates.containsKey(currency)) {
                 sendMessage(chatId, "Валюта не найдена: " + currency);
                 return;
@@ -97,12 +99,15 @@ public class NotifyCommand extends Executer implements Command {
         try {
             double val = Double.parseDouble(valStr);
             NotService.Threshold.Type type;
-            if (operation.equals(">=") || operation.equals("=>")) type = NotService.Threshold.Type.GREATER_EQUAL;
-            else if (operation.equals("<=") || operation.equals("=<")) type = NotService.Threshold.Type.LESS_EQUAL;
-            else {
+            if (operation.equals(">=") || operation.equals("=>")) {
+                    type = NotService.Threshold.Type.GREATER_EQUAL;
+                } else if (operation.equals("<=") || operation.equals("=<")) {
+                type = NotService.Threshold.Type.LESS_EQUAL;
+            } else {
                 sendMessage(chatId, "Неподдерживаемый оператор. Используйте >= или <=.");
                 return;
             }
+
             NotService.setThreshold(chatId, currency, new NotService.Threshold(type, val));
             sendMessage(chatId, "Порог установлен: " + currency + " " + operation + " " + val);
         } catch (NumberFormatException ex) {
@@ -119,7 +124,7 @@ public class NotifyCommand extends Executer implements Command {
             NotService.clearAll(chatId);
             sendMessage(chatId, "Все ваши пороги удалены.");
         } else {
-            String currency = FreeCurrencyAPI.normalizeCurrencyCode(parts[2]);
+            String currency = FreeCurrencyApi.normalizeCurrencyCode(parts[2]);
             NotService.removeThreshold(chatId, currency);
             sendMessage(chatId, "Порог для " + currency + " удалён.");
         }

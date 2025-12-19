@@ -1,7 +1,7 @@
-package org.example.bot.UtilsTests;
+package org.example.bot.utilstest;
 
-import org.example.bot.Utils.CurrencyAPI;
-import org.example.bot.Utils.CurrencyChartService;
+import org.example.bot.utils.CurrencyApi;
+import org.example.bot.utils.CurrencyChartService;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CurrencyChartServiceTest {
 
-    @Test
+    @Test // проверяем, что добалены только даты, где есть курс, формат даты, корректность курса
     void testGetChartDataSmallRange() throws Exception {
-        CurrencyAPI fakeApi = new CurrencyAPI() {
+        CurrencyApi fakeApi = new CurrencyApi() {
             @Override
             public Map<String, Double> getHistorical(String baseCurrency, String date) {
                 // возвращаем разные значения для конкретных дат
@@ -42,9 +42,9 @@ class CurrencyChartServiceTest {
         assertEquals(0.92, points.get(2).rate);
     }
 
-    @Test
+    @Test // пустой ответ, ничего не добавлено
     void testEmptyResponse() throws Exception {
-        CurrencyAPI fakeApi = new CurrencyAPI() {
+        CurrencyApi fakeApi = new CurrencyApi() {
             @Override
             public Map<String, Double> getHistorical(String baseCurrency, String date) {
                 return Map.of(); // пустой ответ API
@@ -60,9 +60,9 @@ class CurrencyChartServiceTest {
         assertTrue(points.isEmpty());
     }
 
-    @Test
+    @Test //Проверка случая одного дня, как и выше с большим диапазоном
     void testSingleDay() throws Exception {
-        CurrencyAPI fakeApi = new CurrencyAPI() {
+        CurrencyApi fakeApi = new CurrencyApi() {
             @Override
             public Map<String, Double> getHistorical(String baseCurrency, String date) {
                 return Map.of("EUR", 0.95);
@@ -79,9 +79,9 @@ class CurrencyChartServiceTest {
         assertEquals(0.95, points.get(0).rate);
     }
 
-    @Test
+    @Test // если не попали в конец, то добавляем вручную
     void testAddLastPointIfMissing() throws Exception {
-        CurrencyAPI fakeApi = new CurrencyAPI() {
+        CurrencyApi fakeApi = new CurrencyApi() {
             @Override
             public Map<String, Double> getHistorical(String baseCurrency, String date) {
                 // шаг = 3, конечная дата 2025-01-10 не входит в цикл
@@ -100,12 +100,11 @@ class CurrencyChartServiceTest {
         assertEquals(0.92, points.get(3).rate);
     }
 
-    @Test
+    @Test // проверяем корректность шага и меньший для последней точки
     void testMediumRangeStep30() throws Exception {
-        CurrencyAPI fakeApi = new CurrencyAPI() {
+        CurrencyApi fakeApi = new CurrencyApi() {
             @Override
             public Map<String, Double> getHistorical(String baseCurrency, String date) {
-                // возвращаем курс = 1 + номер месяца * 0.01
                 int month = LocalDate.parse(date).getMonthValue();
                 return Map.of("EUR", 1.0 + month * 0.01);
             }
@@ -117,13 +116,11 @@ class CurrencyChartServiceTest {
         List<CurrencyChartService.HistoryPoint> points =
                 CurrencyChartService.getChartData("USD","EUR", from, to, fakeApi);
 
-        // проверяем, что первая и последняя точка корректны
         assertEquals("2024-01-01", points.get(0).date);
         assertEquals(1.01, points.get(0).rate);
 
         assertEquals("2024-12-31", points.get(points.size()-1).date);
 
-        // проверяем, что шаг соответствует ожиданиям
         for (int i = 1; i < points.size(); i++) {
             LocalDate prev = LocalDate.parse(points.get(i-1).date);
             LocalDate curr = LocalDate.parse(points.get(i).date);

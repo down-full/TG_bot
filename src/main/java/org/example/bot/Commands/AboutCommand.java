@@ -1,9 +1,10 @@
-package org.example.bot.Commands;
+package org.example.bot.commands;
 
-import org.example.bot.Core.Executer;
+import org.example.bot.core.Executer;
 
-public class AboutCommand extends Executer implements Command{
-    private String answer = "Этот бот конвертирует валюты и обладает полезным для Вас функционалом.";
+public class AboutCommand extends Executer implements Command {
+    private String answer = "Этот бот конвертирует валюты, обладает полезным для Вас функционалом.";
+
     @Override
     public String getName() {
         return "/about";
@@ -13,7 +14,6 @@ public class AboutCommand extends Executer implements Command{
     public String getDescription() {
         return "О возможностях бота";
     }
-
 
     public void execute(Long chatId, String messageText) {
         sendMessage(chatId, answer);

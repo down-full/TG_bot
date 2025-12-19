@@ -1,23 +1,23 @@
-package org.example.bot.Core;
+package org.example.bot.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Executer extends TelegramBot {
 
-    public void sendMessage(Long chatID, String messageText) {
+    public void sendMessage(Long chatId, String messageText) {
         SendMessage message = new SendMessage();
-        message.setChatId(chatID.toString());
+        message.setChatId(chatId.toString());
         message.setText(messageText);
-        try{
+        try {
             execute(message);
-        } catch (TelegramApiException e){
-            System.out.println("Uncorrected "+ e);
+        } catch (TelegramApiException e) {
+            System.out.println("Uncorrected " + e);
         }
     }
 
@@ -39,8 +39,6 @@ public abstract class Executer extends TelegramBot {
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setOneTimeKeyboard(false);
 
-        List<KeyboardRow> keyboard = new ArrayList<>();
-
         KeyboardRow row1 = new KeyboardRow();
         row1.add(new KeyboardButton("/start"));
         row1.add(new KeyboardButton("/help"));
@@ -54,6 +52,7 @@ public abstract class Executer extends TelegramBot {
         KeyboardRow row3 = new KeyboardRow();
         row3.add(new KeyboardButton("/notify"));
 
+        List<KeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);

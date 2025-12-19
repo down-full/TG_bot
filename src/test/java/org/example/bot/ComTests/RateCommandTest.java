@@ -1,6 +1,6 @@
-package org.example.bot.ComTests;
+package org.example.bot.comtests;
 
-import org.example.bot.Commands.RateCommand;
+import org.example.bot.commands.RateCommand;
 import org.junit.Before;
 import org.junit.Test;
 

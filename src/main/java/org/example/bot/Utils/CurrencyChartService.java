@@ -1,8 +1,10 @@
-package org.example.bot.Utils;
+package org.example.bot.utils;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class CurrencyChartService {
 
@@ -22,7 +24,7 @@ public class CurrencyChartService {
             LocalDate from,
             LocalDate to
     ) throws Exception {
-        return getChartData(baseCurrency, targetCurrency, from, to, new FreeCurrencyAPIImpl());
+        return getChartData(baseCurrency, targetCurrency, from, to, new FreeCurrencyApiImpl());
     }
 
     public static List<HistoryPoint> getChartData(
@@ -30,7 +32,7 @@ public class CurrencyChartService {
             String targetCurrency,
             LocalDate from,
             LocalDate to,
-            CurrencyAPI api
+            CurrencyApi api
     ) throws Exception {
 
         long days = ChronoUnit.DAYS.between(from, to);
@@ -63,10 +65,18 @@ public class CurrencyChartService {
     }
 
     private static int takeStep(long days) {
-        if (days <= 31) return 3;
-        if (days <= 90) return 3;
-        if (days <= 365) return 30;
-        if (days <= 365 * 3) return 90;
+        if (days <= 31) {
+            return 3;
+        }
+        if (days <= 90) { 
+            return 3;
+        }
+        if (days <= 365) { 
+            return 30;
+        }
+        if (days <= 365 * 3) { 
+            return 90;
+        }
         return 180;
     }
 }

@@ -1,6 +1,6 @@
-package org.example.bot.UtilsTests;
+package org.example.bot.utilstest;
 
-import org.example.bot.Utils.DateParser;
+import org.example.bot.utils.DateParser;
 import org.junit.Before;
 import org.junit.Test;
 

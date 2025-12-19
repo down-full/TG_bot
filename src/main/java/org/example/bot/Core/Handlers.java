@@ -1,18 +1,17 @@
-package org.example.bot.Core;
+package org.example.bot.core;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.example.bot.Commands.AboutCommand;
-import org.example.bot.Commands.AuthorsCommand;
-import org.example.bot.Commands.ChartCommand;
-import org.example.bot.Commands.Command;
-import org.example.bot.Commands.ConvertCommand;
-import org.example.bot.Commands.FavouritesCommand;
-import org.example.bot.Commands.HelpCommand;
-import org.example.bot.Commands.NotifyCommand;
-import org.example.bot.Commands.RateCommand;
-import org.example.bot.Commands.StartCommand;
+import org.example.bot.commands.AboutCommand;
+import org.example.bot.commands.AuthorsCommand;
+import org.example.bot.commands.ChartCommand;
+import org.example.bot.commands.Command;
+import org.example.bot.commands.ConvertCommand;
+import org.example.bot.commands.FavouritesCommand;
+import org.example.bot.commands.HelpCommand;
+import org.example.bot.commands.NotifyCommand;
+import org.example.bot.commands.RateCommand;
+import org.example.bot.commands.StartCommand;
 
 public class Handlers extends Executer {
     private final Map<String, Command> commands = new LinkedHashMap<>();
@@ -44,7 +43,8 @@ public class Handlers extends Executer {
         if (command != null) {
             command.execute(chatId, messageText);
         } else {
-            sendMessage(chatId, "Неизвестная команда. Используйте /help для получения списка команд.");
+            sendMessage(chatId, "Неизвестная команда."
+            + "Используйте /help для получения списка команд.");
         }
     }
 }

@@ -1,11 +1,13 @@
-package org.example.bot.Utils;
+package org.example.bot.utils;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-//import java.time.format.DateTimeParseException;
-import java.util.*;
-import java.util.regex.*;
+import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DateParser {
 
@@ -45,15 +47,21 @@ public class DateParser {
 
         // 1) relative: today, yesterday, last month
         LocalDate rel = parseRelative(input);
-        if (rel != null) return rel;
+        if (rel != null) {
+            return rel;
+        }
 
         // 2) possible formats: dd.mm.yyyy, yyyy-mm-dd
         LocalDate num = parseNumFormats(input);
-        if (num != null) return num;
+        if (num != null) {
+            return num;
+        }
 
         // 3) text month: 1 may 2023, май 2023
         LocalDate text = parseTextMonth(input);
-        if (text != null) return text;
+        if (text != null) {
+            return text;
+        }
 
         return null;
     }
@@ -65,8 +73,9 @@ public class DateParser {
         if (m.matches()) {
             LocalDate from = parseSingleDate(m.group(1).trim());
             LocalDate to   = parseSingleDate(m.group(2).trim());
-            if (from != null && to != null)
+            if (from != null && to != null) {
                 return new ParsedDateRange(from, to);
+            }
         }
 
         return null;
@@ -92,17 +101,30 @@ public class DateParser {
             case "last year":
             case "год назад":
                 return now.minusYears(1);
+                
+            default:
         }
         return null;
     }
 
     private static LocalDate parseNumFormats(String s) {
-        try { return LocalDate.parse(s, DMY); } catch (Exception ignored) {}
-        try { return LocalDate.parse(s, YMD); } catch (Exception ignored) {}
-        try { return LocalDate.parse(s, DMY_SHORT); } catch (Exception ignored) {}
-        try { return LocalDate.parse(s, DM_SLASH); } catch (Exception ignored) {}
-        try { return LocalDate.parse(s, DM_DASH); } catch (Exception ignored) {}
-
+        DateTimeFormatter[] formatters = {
+            DMY,
+            YMD,
+            DMY_SHORT,
+            DM_SLASH,
+            DM_DASH
+        };
+        
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                return LocalDate.parse(s, formatter);
+            } catch (DateTimeParseException e) {
+                // Игнорируем только DateTimeParseException
+                continue;
+            }
+        }
+        
         return null;
     }
 
@@ -125,7 +147,9 @@ public class DateParser {
                 Month m = monthNames.get(parts[1]);
                 int year = Integer.parseInt(parts[2]);
                 return LocalDate.of(year, m, day);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                //comment
+            }
         }
 
         return null;

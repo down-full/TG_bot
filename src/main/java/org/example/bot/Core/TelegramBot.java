@@ -1,4 +1,4 @@
-package org.example.bot.Core;
+package org.example.bot.core;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -11,9 +11,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             System.out.println(update.getMessage().getText());
-            Long chatID = update.getMessage().getChatId();
+            Long chatId = update.getMessage().getChatId();
             String text = update.getMessage().getText().toLowerCase();
-            messageList.telegramHandlers(chatID, text);
+            messageList.telegramHandlers(chatId, text);
         }
     }
 

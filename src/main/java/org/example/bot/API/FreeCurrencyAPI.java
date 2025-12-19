@@ -1,6 +1,4 @@
-package org.example.bot.API;
-
-import org.json.JSONObject;
+package org.example.bot.api;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,8 +6,11 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
 
-public class FreeCurrencyAPI {
+
+
+public class FreeCurrencyApi {
 
     private static final String API_KEY = System.getenv("CURRENCY_API_KEY");
     private static final String BASE_URL = "https://api.freecurrencyapi.com/v1/latest";
@@ -21,9 +22,9 @@ public class FreeCurrencyAPI {
 
     private static final Map<String, Map<String, Double>> historicalCache = new HashMap<>();
 
-    /* ===================== ОБЩИЙ МЕТОД ===================== */
-
-    private static Map<String, Double> fetchRates(String url, RateExtractor extractor) throws Exception {
+    private static Map<String, Double> fetchRates(String url, 
+                                                  RateExtractor extractor)
+                                                  throws Exception {
         HttpURLConnection conn =
                 (HttpURLConnection) new URI(url).toURL().openConnection();
         conn.setRequestMethod("GET");
@@ -48,20 +49,22 @@ public class FreeCurrencyAPI {
         }
     }
 
-    /* ===================== HISTORICAL ===================== */
-
-    private static Map<String, Double> getHistoricalRates(String baseCurrency, String date) throws Exception {
-        String url = HIST_URL +
-                "?apikey=" + API_KEY +
-                "&date=" + date +
-                "&base_currency=" + baseCurrency;
+    private static Map<String, Double> getHistoricalRates(String baseCurrency,
+                                                          String date) 
+                                                          throws Exception {
+        String url = HIST_URL 
+                + "?apikey=" + API_KEY 
+                + "&date=" + date 
+                + "&base_currency=" + baseCurrency;
 
         return fetchRates(url, root ->
                 root.getJSONObject("data").getJSONObject(date)
         );
     }
 
-    public static Map<String, Double> getHistorical(String baseCurrency, String date) throws Exception {
+    public static Map<String, Double> getHistorical(String baseCurrency,
+                                                    String date)
+                                                    throws Exception {
         String key = baseCurrency + "_" + date;
         System.out.println("Запрос от " + key);
 
@@ -75,8 +78,6 @@ public class FreeCurrencyAPI {
         return rates;
     }
 
-    /* ===================== RUB ===================== */
-
     public static Map<String, Double> getRubRates() throws Exception {
         if (isCacheValid()) {
             System.out.println("Используется актуальный кэш");
@@ -85,7 +86,7 @@ public class FreeCurrencyAPI {
 
         System.out.println("Берем из API");
 
-        Map<String, Double> usdRates = getUSDRates();
+        Map<String, Double> usdRates = getUsdRates();
         double rubPerUsd = usdRates.get("RUB");
 
         Map<String, Double> rubRates = new HashMap<>();
@@ -99,19 +100,15 @@ public class FreeCurrencyAPI {
     }
 
     private static boolean isCacheValid() {
-        return cacheRates != null &&
-                (System.currentTimeMillis() - lastUpdate) < CACHE_DURATION;
+        return cacheRates != null 
+               && (System.currentTimeMillis() - lastUpdate) < CACHE_DURATION;
     }
 
-    /* ===================== USD ===================== */
-
-    private static Map<String, Double> getUSDRates() throws Exception {
+    private static Map<String, Double> getUsdRates() throws Exception {
         String url = BASE_URL + "?apikey=" + API_KEY + "&base_currency=USD";
 
         return fetchRates(url, root -> root.getJSONObject("data"));
     }
-
-    /* ===================== UTILS ===================== */
 
     public static String normalizeCurrencyCode(String code) {
         code = code.toUpperCase();

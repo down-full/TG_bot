@@ -1,14 +1,13 @@
-package org.example.bot.Commands;
-
-import org.example.bot.Core.Executer;
-import org.example.bot.Utils.ChartGenerator;
-import org.example.bot.Utils.DateParser;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+package org.example.bot.commands;
 
 import java.io.File;
 import java.time.LocalDate;
+import org.example.bot.core.Executer;
+import org.example.bot.utils.ChartGenerator;
+import org.example.bot.utils.DateParser;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class ChartCommand implements Command {
 
@@ -29,11 +28,11 @@ public class ChartCommand implements Command {
     }
 
     @Override
-public void execute(Long chatId, String messageText) 
-    {
+public void execute(Long chatId, String messageText) {
         String[] parts = messageText.trim().split("\\s+", 4);
         if (parts.length < 4) {
-            sendError(chatId, "Неверный формат команды.\nПример: /chart USD RUB 01.01.2023 10.01.2023");
+            sendError(chatId,
+                 "Неверный формат команды.\nПример: /chart USD RUB 01.01.2023 10.01.2023");
             return;
         }
 
@@ -58,22 +57,28 @@ public void execute(Long chatId, String messageText)
                 sendError(chatId, "Не возможно предоставить график за один день");
                 return;
             } else {
-                sendError(chatId, "Не удалось распознать даты. Используйте корректные форматы или диапазон через дефис.");
+                sendError(chatId, "Не удалось распознать даты."
+                + " Используйте корректные форматы или диапазон через дефис.");
                 return;
             }
         }
 
         if (fromDate == null || toDate == null) {
-            sendError(chatId, "Не удалось распознать даты. Ознакомьтесь с инструкцией и проверьте формат.");
+            sendError(chatId, "Не удалось распознать даты."
+            + "Ознакомьтесь с инструкцией и проверьте формат.");
             return;
         }
 
         try {
             File tempFile = File.createTempFile("chart_", ".png");
-            ChartGenerator.generatePngChart(baseCurrency, targetCurrency, fromDate, toDate, tempFile.getAbsolutePath());
+            ChartGenerator.generatePngChart(baseCurrency,
+                                            targetCurrency,
+                                            fromDate, 
+                                            toDate, 
+                                            tempFile.getAbsolutePath());
             sendFile(chatId, tempFile);
             tempFile.deleteOnExit();
-            //sendError(chatId, "Распарсилось как " + fromDate + " ------ " + toDate);
+            //sendError(chatId, "Распарсилось как " + fromDate + " ------ " + toDate); - для теста
         } catch (Exception e) {
             sendError(chatId, "Ошибка при генерации графика: " + e.getMessage());
             e.printStackTrace();

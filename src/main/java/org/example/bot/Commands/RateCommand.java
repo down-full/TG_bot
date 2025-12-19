@@ -1,12 +1,12 @@
-package org.example.bot.Commands;
+package org.example.bot.commands;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Map;
+import org.example.bot.api.FreeCurrencyApi;
+import org.example.bot.core.Executer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.example.bot.API.FreeCurrencyAPI;
-import org.example.bot.Core.Executer;
 
 public class RateCommand extends Executer implements Command {
     private static final Logger log = LoggerFactory.getLogger(RateCommand.class);
@@ -19,10 +19,10 @@ public class RateCommand extends Executer implements Command {
 
     @Override
     public String getDescription() {
-        return "Курсы валют к RUB\n" +
-                "Формат:\n" +
-                "/rate - все курсы\n" +
-                "/rate <валюта> - курс конкретной валюты";
+        return "Курсы валют к RUB\n"
+             + "Формат:\n" 
+             + "/rate - все курсы\n"
+             + "/rate <валюта> - курс конкретной валюты";
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RateCommand extends Executer implements Command {
     }
 
     private void showAllRates(Long chatId) throws Exception {
-        Map<String, Double> rubRates = FreeCurrencyAPI.getRubRates();
+        Map<String, Double> rubRates = FreeCurrencyApi.getRubRates();
         StringBuilder response = new StringBuilder("Курсы валют к RUB:\n\n");
 
         rubRates.forEach((currency, rate) ->
@@ -60,11 +60,12 @@ public class RateCommand extends Executer implements Command {
     }
 
     private void showSingleRate(Long chatId, String currency) throws Exception {
-        currency = FreeCurrencyAPI.normalizeCurrencyCode(currency);
-        Map<String, Double> rubRates = FreeCurrencyAPI.getRubRates();
+        currency = FreeCurrencyApi.normalizeCurrencyCode(currency);
+        Map<String, Double> rubRates = FreeCurrencyApi.getRubRates();
 
         if (!rubRates.containsKey(currency)) {
-            sendMessage(chatId, "Валюта не найдена. Доступные: " + String.join(", ", rubRates.keySet()));
+            sendMessage(chatId, "Валюта не найдена. Доступные: " 
+            + String.join(", ", rubRates.keySet()));
             return;
         }
 

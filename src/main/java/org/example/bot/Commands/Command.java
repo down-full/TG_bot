@@ -1,8 +1,9 @@
-package org.example.bot.Commands;
+package org.example.bot.commands;
 
 import java.util.Map;
 
 public interface Command {
+
     String getName();
 
     String getDescription();
@@ -12,4 +13,4 @@ public interface Command {
     default void register(Map<String, Command> registry) {
         registry.put(getName(), this);
     }
-};
+}

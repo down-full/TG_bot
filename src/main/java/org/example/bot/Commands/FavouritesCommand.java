@@ -1,13 +1,12 @@
-package org.example.bot.Commands;
+package org.example.bot.commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.example.bot.API.FreeCurrencyAPI;
-import org.example.bot.Core.Executer;
-import org.example.bot.Utils.NotService;
+import org.example.bot.api.FreeCurrencyApi;
+import org.example.bot.core.Executer;
+import org.example.bot.utils.NotService;
 
 public class FavouritesCommand extends Executer implements Command {
     private static final Map<Long, List<String>> userFavorites = new HashMap<>();
@@ -57,12 +56,12 @@ public class FavouritesCommand extends Executer implements Command {
         List<String> favourites = userFavorites.getOrDefault(chatId, new ArrayList<>());
 
         try {
-            Map<String, Double> availableRates = FreeCurrencyAPI.getRubRates();
+            Map<String, Double> availableRates = FreeCurrencyApi.getRubRates();
             List<String> added = new ArrayList<>();
             List<String> invalid = new ArrayList<>();
 
             for (int i = 1; i < args.length && favourites.size() < MAX_FAVOURITES; ++i) {
-                String currency = FreeCurrencyAPI.normalizeCurrencyCode(args[i]);
+                String currency = FreeCurrencyApi.normalizeCurrencyCode(args[i]);
 
                 if (!favourites.contains(currency)) {
                     if (availableRates.containsKey(currency)) {
@@ -81,7 +80,9 @@ public class FavouritesCommand extends Executer implements Command {
                 response.append("Добавлено: ").append(String.join(", ", added));
             }
             if (!invalid.isEmpty()) {
-                if (!added.isEmpty()) response.append("\n");
+                if (!added.isEmpty()) { 
+                    response.append("\n"); 
+                }
                 response.append("Неверные валюты: ").append(String.join(", ", invalid));
             }
             if (added.isEmpty() && invalid.isEmpty()) {
@@ -89,8 +90,12 @@ public class FavouritesCommand extends Executer implements Command {
             }
 
             if (favourites.size() == MAX_FAVOURITES) {
-                if (!response.isEmpty()) response.append("\n");
-                response.append("Достигнут лимит избранных валют (").append(MAX_FAVOURITES).append(")");
+                if (!response.isEmpty()) { 
+                    response.append("\n"); 
+                }
+                response.append("Достигнут лимит избранных валют (")
+                .append(MAX_FAVOURITES)
+                .append(")");
             }
 
             sendMessage(chatId, response.toString());
@@ -113,7 +118,7 @@ public class FavouritesCommand extends Executer implements Command {
         List<String> notFound = new ArrayList<>();
 
         for (int i = 2; i < args.length; ++i) {
-            String currency = FreeCurrencyAPI.normalizeCurrencyCode(args[i]);
+            String currency = FreeCurrencyApi.normalizeCurrencyCode(args[i]);
             if (favourites.contains(currency)) {
                 favourites.remove(currency);
                 removed.add(currency);
@@ -133,7 +138,9 @@ public class FavouritesCommand extends Executer implements Command {
             response.append("Удалено: ").append(String.join(", ", removed));
         }
         if (!notFound.isEmpty()) {
-            if (!removed.isEmpty()) response.append("\n");
+            if (!removed.isEmpty()) { 
+                response.append("\n"); 
+            }
             response.append("Не найдено: ").append(String.join(", ", notFound));
         }
         if (removed.isEmpty() && notFound.isEmpty()) {
@@ -158,7 +165,7 @@ public class FavouritesCommand extends Executer implements Command {
         }
 
         try {
-            Map<String, Double> rubRates = FreeCurrencyAPI.getRubRates();
+            Map<String, Double> rubRates = FreeCurrencyApi.getRubRates();
             StringBuilder response = new StringBuilder("Курсы избранных валют:\n\n");
 
             for (String currency : favourites) {

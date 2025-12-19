@@ -1,6 +1,6 @@
-package org.example.bot.Commands;
+package org.example.bot.commands;
 
-import org.example.bot.Core.Executer;
+import org.example.bot.core.Executer;
 
 public class StartCommand extends Executer implements Command {
 
@@ -16,6 +16,7 @@ public class StartCommand extends Executer implements Command {
 
     @Override
     public void execute(Long chatId, String messageText) {
-        sendMessageWithKeyboard(chatId, "Привет! Это бот-конвертатор валют.\n\nИспользуйте кнопки ниже:");
+        sendMessageWithKeyboard(chatId, "Привет! Это бот-конвертатор валют."
+        + "\n\nИспользуйте кнопки ниже:");
     }
 }

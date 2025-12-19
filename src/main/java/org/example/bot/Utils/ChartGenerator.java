@@ -1,10 +1,13 @@
-package org.example.bot.Utils;
+package org.example.bot.utils;
 
-import org.knowm.xchart.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
 
 public class ChartGenerator {
 
@@ -23,11 +26,11 @@ public class ChartGenerator {
         List<CurrencyChartService.HistoryPoint> points =
                 CurrencyChartService.getChartData(baseCurrency, targetCurrency, from, to);
 
-        List<Date> xDates = points.stream()
+        List<Date> xdates = points.stream()
                 .map(p -> convert(LocalDate.parse(p.date)))
                 .collect(Collectors.toList());
 
-        List<Double> yValues = points.stream()
+        List<Double> yvalues = points.stream()
                 .map(p -> p.rate)
                 .collect(Collectors.toList());
 
@@ -42,7 +45,7 @@ public class ChartGenerator {
         chart.getStyler().setLegendVisible(false);
         chart.getStyler().setXAxisLabelRotation(45);
 
-        chart.addSeries(baseCurrency + "/" + targetCurrency, xDates, yValues);
+        chart.addSeries(baseCurrency + "/" + targetCurrency, xdates, yvalues);
 
         BitmapEncoder.saveBitmap(chart, outputFile, BitmapEncoder.BitmapFormat.PNG);
 

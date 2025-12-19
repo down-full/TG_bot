@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.bot.Core.TelegramBot;
-import org.example.bot.Utils.NotService;
+import org.example.bot.core.TelegramBot;
+import org.example.bot.utils.NotService;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;

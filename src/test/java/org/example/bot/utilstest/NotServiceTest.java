@@ -1,6 +1,6 @@
-package org.example.bot.UtilsTests;
+package org.example.bot.utilstest;
 
-import org.example.bot.Utils.NotService;
+import org.example.bot.utils.NotService;
 import org.junit.Before;
 import org.junit.Test;
 
